@@ -159,7 +159,7 @@ const acceptDonation = async (req: AuthenticatedRequest, res: Response) => {
           patientBloodType: patientDetails.BloodType,
         });
         const filename=path.basename(pdfFilePath)
-        const pdfUrl=`http://localhost:5000/certificates/${filename}`
+        const pdfUrl=`https://bank-back-rni1.onrender.com/certificates/${filename}`
 
 
         return res.status(200).json({
