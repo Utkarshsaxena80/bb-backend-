@@ -17,19 +17,46 @@ import adminLogin from "../routes/adminLogin.routes.ts";
 import auth from "../routes/auth.routes.ts";
 // Import health check route
 import health from "../routes/health.routes.ts";
+// Import CORS enhancement middleware
+import {
+  corsEnhancementMiddleware,
+  securityHeadersMiddleware,
+} from "../middlewares/cors.middleware.ts";
+// Import CORS configuration
+import {
+  corsConfig,
+  isOriginAllowed,
+  logCorsConfig,
+} from "../config/cors.config.ts";
 
 const app = express();
 app.use(express.json());
 
+// CORS Configuration - Enhanced for better security and flexibility
 app.use(
   cors({
-    origin: ["https://bb-frontend-seven.vercel.app", "http://localhost:3000"],
-    methods: ["GET", "POST", "OPTIONS"],
-    credentials: true,
+    origin: (origin, callback) => {
+      if (isOriginAllowed(origin)) {
+        return callback(null, true);
+      } else {
+        console.warn(`🚫 CORS blocked request from origin: ${origin}`);
+        return callback(new Error("Not allowed by CORS"), false);
+      }
+    },
+    methods: corsConfig.allowedMethods,
+    allowedHeaders: corsConfig.allowedHeaders,
+    credentials: corsConfig.credentials,
+    optionsSuccessStatus: 200, // Support legacy browsers
+    preflightContinue: false,
+    maxAge: corsConfig.maxAge,
   })
 );
 
 app.use(cookieParser());
+
+// Apply additional CORS and security headers
+app.use(corsEnhancementMiddleware);
+app.use(securityHeadersMiddleware);
 
 const PORT: number = 5000;
 
@@ -51,6 +78,8 @@ app.use("/", adminLogin);
 app.use("/", auth);
 // Make the 'generated-pdfs' folder publicly accessible under the '/certificates' route
 app.use("/certificates", express.static("generated-pdfs"));
+
 app.listen(PORT, () => {
-  console.log(`listening on port ${PORT}`);
+  console.log(`🚀 Blood Bank Backend Server listening on port ${PORT}`);
+  logCorsConfig();
 });
