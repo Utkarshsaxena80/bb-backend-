@@ -1,0 +1,107 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Patients {
+  id        String   @id @default(uuid())
+  name      String
+  email     String
+  password  String
+  phone     String
+  BloodBank String
+  BloodType String
+  city      String
+  status    Boolean  @default(true)
+  state     String
+  age       Int
+  createdAt DateTime @default(now())
+}
+
+model donors {
+  id        String   @id @default(uuid())
+  name      String
+  email     String
+  password  String
+  phone     String
+  BloodBank String
+  BloodType String
+  city      String
+  status    Boolean  @default(true)
+  state     String
+  age       Int
+  createdAt DateTime @default(now())
+}
+
+model bloodBanks {
+  id             String   @id @default(uuid())
+  name           String
+  adminName      String
+  licenseNumber  String
+  email          String
+  password       String
+  phone          String
+  totalBloodBags Int
+  address        String
+  city           String
+  state          String
+  createdAt      DateTime @default(now())
+}
+
+model DonationRequest {
+  id                   String      @id @default(uuid())
+  donorId              String
+  donor                String
+  bloodBankId          String
+  bloodBank            String
+  createdAt            DateTime    @default(now())
+  status               String      @default("pending")
+  donorBloodType       String
+  patientId            String
+  patientCity          String
+  patientBloodBankId   String
+  patientBloodBankName String
+  patientBloodType     String
+  urgencyLevel         String?     @default("medium")
+  requiredUnits        Int?        @default(1)
+  notes                String?
+  preferredDate        DateTime?
+  approvedAt           DateTime?
+  bloodUnits           BloodUnit[] // Relation to blood units created from this donation
+}
+
+model BloodUnit {
+  id                String          @id @default(uuid())
+  unitNumber        String // Sequential number for this donation (e.g., "1", "2", "3")
+  donationRequestId String
+  donationRequest   DonationRequest @relation(fields: [donationRequestId], references: [id])
+  donorId           String
+  donorName         String
+  donorBloodType    String
+  bloodBankId       String
+  bloodBankName     String
+  donationDate      DateTime        @default(now())
+  expiryDate        DateTime
+  volume            Int             @default(450) // Volume in ml (standard blood bag is ~450ml)
+  status            String          @default("available") // available, used, expired, discarded
+  barcode           String? // Optional barcode for physical tracking
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  usedAt            DateTime?
+  patientUsedFor    String? // Patient ID if blood unit is used
+  notes             String?
+
+  @@unique([donationRequestId, unitNumber]) // Ensure unique unit numbers per donation
+  @@map("blood_units")
+}
