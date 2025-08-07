@@ -73,7 +73,7 @@ const patientR = async (req: Request, res: Response): Promise<void> => {
 
       res.cookie("authToken", token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
+        secure: true,
         sameSite: "none",
         maxAge: 7 * 24 * 60 * 60 * 1000,
       });
