@@ -16,7 +16,7 @@ app.use(express.json());
 
 app.use(cors({
     origin:"https://bb-frontend-seven.vercel.app",
-    methods:['GET','POST'],
+    methods:['GET','POST','OPTIONS'],
     credentials:true
 }))
 
