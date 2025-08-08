@@ -9,6 +9,7 @@ const requiredField = z.object({
     .min(1, "City is required")
     .max(100, "City name too long")
     .trim(),
+  match: z.string().optional(),
 });
 
 interface UserResponse {
@@ -30,6 +31,24 @@ interface ApiResponse<T = any> {
 
 const bycity = async (req: Request, res: Response): Promise<void> => {
   try {
+    // Validate that required query parameters exist
+    if (!req.query.field) {
+      res.status(400).json({
+        success: false,
+        message:
+          "Missing required parameter: field (must be '1' for patients or '2' for donors)",
+      });
+      return;
+    }
+
+    if (!req.query.city) {
+      res.status(400).json({
+        success: false,
+        message: "Missing required parameter: city",
+      });
+      return;
+    }
+
     const fields = requiredField.parse(req.query);
     const normalizedCity = fields.city.toLowerCase().trim();
 

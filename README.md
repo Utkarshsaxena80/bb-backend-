@@ -216,17 +216,22 @@ curl -X GET http://localhost:3000/patientDetail
 ```
 
 ### 5. Get Patients/Donors by City
-**GET** `/getByCity?city=CityName&type=patient`
-**GET** `/getByCity?city=CityName&type=donor`
+**GET** `/getByCity?field=1&city=CityName` (for patients)
+**GET** `/getByCity?field=2&city=CityName` (for donors)
 
 **cURL Examples:**
 ```bash
 # Get patients by city
-curl -X GET "http://localhost:3000/getByCity?city=New York&type=patient"
+curl -X GET "http://localhost:3000/getByCity?field=1&city=New%20York"
 
 # Get donors by city
-curl -X GET "http://localhost:3000/getByCity?city=Los Angeles&type=donor"
+curl -X GET "http://localhost:3000/getByCity?field=2&city=Los%20Angeles"
+
+# Using match parameter (optional)
+curl -X GET "http://localhost:3000/getByCity?field=1&city=New&match=startsWith"
 ```
+
+See detailed documentation in [BYCITY_ENDPOINT_DOCS.md](./BYCITY_ENDPOINT_DOCS.md)
 
 ### 6. Create Donation Request (Protected)
 **POST** `/donate`

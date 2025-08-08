@@ -5,7 +5,10 @@
   "main": "./src/index.ts",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node comprehensive-tests.js",
+    "test:api": "node api-tests.js",
+    "test:db": "node database-tests.js",
+    "test:env": "node environment-tests.js",
     "dev": "nodemon ./src/index.ts"
   },
   "keywords": [],
