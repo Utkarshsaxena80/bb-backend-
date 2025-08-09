@@ -32,54 +32,25 @@ class PDFService {
     }
   }
 
-  async generateDonationCertificate(
+async generateDonationCertificate(
     donationDetails: DonationDetails
-  ): Promise<string> {
-    return new Promise((resolve, reject) => {
-      try {
-        // Create PDF directory if it doesn't exist
-        const pdfDir = path.join(process.cwd(), "generated-pdfs");
-        this.ensureDirectoryExists(pdfDir);
+  ): Promise<PDFKit.PDFDocument> { // <-- Return type is now PDFDocument
+    
+    // 1. Create the PDF document in memory
+    const doc = new PDFDocument({ margin: 50 });
 
-        // Generate unique filename
-        const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
-        const filename = `donation-certificate-${donationDetails.donorId}-${timestamp}.pdf`;
-        const filepath = path.join(pdfDir, filename);
+    // 2. Add all your content to the document
+    this.addHeader(doc, donationDetails);
+    this.addDonorInfo(doc, donationDetails);
+    this.addDonationDetails(doc, donationDetails);
+    this.addBloodUnitsTable(doc, donationDetails);
+    this.addFooter(doc, donationDetails);
 
-        // Create PDF document
-        const doc = new PDFDocument({ margin: 50 });
-        const stream = fs.createWriteStream(filepath);
-        doc.pipe(stream);
+    // 3. Finalize the document
+    doc.end();
 
-        // Add header
-        this.addHeader(doc, donationDetails);
-
-        // Add donor information
-        this.addDonorInfo(doc, donationDetails);
-
-        // Add donation details
-        this.addDonationDetails(doc, donationDetails);
-
-        // Add blood units table
-        this.addBloodUnitsTable(doc, donationDetails);
-
-        // Add footer
-        this.addFooter(doc, donationDetails);
-
-        // Finalize PDF
-        doc.end();
-
-        stream.on("finish", () => {
-          resolve(filepath);
-        });
-
-        stream.on("error", (error) => {
-          reject(error);
-        });
-      } catch (error) {
-        reject(error);
-      }
-    });
+    // 4. Return the document object itself, NOT a file path
+    return doc;
   }
 
   private addHeader(doc: PDFKit.PDFDocument, details: DonationDetails): void {

@@ -10,10 +10,7 @@ import {
   markExpiredBloodUnits,
   getBloodInventory,
 } from "../controllers/bloodUnit.controllers.ts";
-import {
-  downloadDonationCertificate,
-  getDonorDonationHistory,
-} from "../controllers/donationCertificate.controllers.ts";
+import { downloadDonationCertificate } from "../controllers/pdfDoc.controllers.ts";
 import { authMiddleware } from "../middlewares/token.middleware.ts";
 
 const router = Router();
@@ -48,6 +45,6 @@ router.get(
 );
 
 // Get donor's donation history with certificate links
-router.get("/my-donations", authMiddleware, getDonorDonationHistory);
+// router.get("/my-donations", authMiddleware, getDonorDonationHistory);
 
 export default router;

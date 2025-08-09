@@ -113,82 +113,96 @@ const acceptDonation = async (req: AuthenticatedRequest, res: Response) => {
 
       return { updatedDonationRequest, bloodUnits };
     });
+//changes-->
 
-    // Generate PDF certificate
-    try {
-      // Get donor and patient details for PDF
-      const donorDetails = await prisma.donors.findUnique({
-        where: { id: donationRequest.donorId },
-        select: {
-          name: true,
-          email: true,
-          phone: true,
-          age: true,
-        },
-      });
+const certificateUrl=`/donations/certificate/${donationRequestId}/download`
 
-      const patientDetails = await prisma.patients.findUnique({
-        where: { id: donationRequest.patientId },
-        select: {
-          BloodType: true,
-        },
-      });
-
-      if (donorDetails && patientDetails) {
-        // Generate PDF certificate
-        const pdfFilePath = await PDFService.generateDonationCertificate({
-          donorName: donorDetails.name,
-          donorId: donationRequest.donorId,
-          donorEmail: donorDetails.email,
-          donorPhone: donorDetails.phone,
-          donorBloodType: donationRequest.donorBloodType,
-          donorAge: donorDetails.age,
-          bloodBankName: bloodBank.name,
-          bloodBankAddress: bloodBank.address || `${bloodBank.name} Blood Bank`,
-          donationDate: donationDate,
-          numberOfUnits: numberOfUnits,
-          bloodUnits: result.bloodUnits.map((unit:any) => ({
-            id: unit.id,
-            unitNumber: unit.unitNumber,
-            barcode: unit.barcode || "N/A",
-            volume: unit.volume,
-            expiryDate: unit.expiryDate,
-          })),
-          donationRequestId: donationRequestId,
-          urgencyLevel: donationRequest.urgencyLevel || "medium",
-          patientBloodType: patientDetails.BloodType,
-        });
-        const filename=path.basename(pdfFilePath)
-        const pdfUrl=`https://bank-back-rni1.onrender.com/certificates/${filename}`
-
-
-        return res.status(200).json({
-          success: true,
-          message: `Donation accepted successfully and ${numberOfUnits} individual blood units created. PDF certificate generated.`,
-          data: {
-            donationRequest: result.updatedDonationRequest,
-            bloodUnits: result.bloodUnits,
-            totalUnitsCreated: result.bloodUnits.length,
-            certificateUrl: pdfUrl,
-          },
-        });
-      }
-    } catch (pdfError) {
-      console.error("PDF generation failed:", pdfError);
-      // Still return success but note PDF generation failed
-    }
-
-    // Success response (fallback if PDF generation fails)
-    return res.status(200).json({
-      success: true,
-      message: `Donation accepted successfully and ${numberOfUnits} individual blood units created.`,
+return res.status(200).json({
+        success: true,
+      message: "Donation accepted successfully. Certificate is available for download.",
       data: {
         donationRequest: result.updatedDonationRequest,
         bloodUnits: result.bloodUnits,
         totalUnitsCreated: result.bloodUnits.length,
-        note: "PDF certificate generation failed, but donation was processed successfully.",
-      },
-    });
+        certificateUrl: certificateUrl, 
+}
+  })
+
+//to here 
+
+    // Generate PDF certificate
+    //try {
+      // Get donor and patient details for PDF
+    //   const donorDetails = await prisma.donors.findUnique({
+    //     where: { id: donationRequest.donorId },
+    //     select: {
+    //       name: true,
+    //       email: true,
+    //       phone: true,
+    //       age: true,
+    //     },
+    //   });
+
+    //   const patientDetails = await prisma.patients.findUnique({
+    //     where: { id: donationRequest.patientId },
+    //     select: {
+    //       BloodType: true,
+    //     },
+    //   });
+
+    //   if (donorDetails && patientDetails) {
+    //     // Generate PDF certificate
+    //     const pdfFilePath = await PDFService.generateDonationCertificate({
+    //       donorName: donorDetails.name,
+    //       donorId: donationRequest.donorId,
+    //       donorEmail: donorDetails.email,
+    //       donorPhone: donorDetails.phone,
+    //       donorBloodType: donationRequest.donorBloodType,
+    //       donorAge: donorDetails.age,
+    //       bloodBankName: bloodBank.name,
+    //       bloodBankAddress: bloodBank.address || `${bloodBank.name} Blood Bank`,
+    //       donationDate: donationDate,
+    //       numberOfUnits: numberOfUnits,
+    //       bloodUnits: result.bloodUnits.map((unit:any) => ({
+    //         id: unit.id,
+    //         unitNumber: unit.unitNumber,
+    //         barcode: unit.barcode || "N/A",
+    //         volume: unit.volume,
+    //         expiryDate: unit.expiryDate,
+    //       })),
+    //       donationRequestId: donationRequestId,
+    //       urgencyLevel: donationRequest.urgencyLevel || "medium",
+    //       patientBloodType: patientDetails.BloodType,
+    //     });
+    //     const filename=path.basename(pdfFilePath)
+    //     const pdfUrl=`/certificates/${filename}`
+    //     return res.status(200).json({
+    //       success: true,
+    //       message: `Donation accepted successfully and ${numberOfUnits} individual blood units created. PDF certificate generated.`,
+    //       data: {
+    //         donationRequest: result.updatedDonationRequest,
+    //         bloodUnits: result.bloodUnits,
+    //         totalUnitsCreated: result.bloodUnits.length,
+    //         certificateUrl: pdfUrl,
+    //       },
+    //     });
+    //   }
+    // } catch (pdfError) {
+    //   console.error("PDF generation failed:", pdfError);
+    //   // Still return success but note PDF generation failed
+    // }
+
+    // // Success response (fallback if PDF generation fails)
+    // return res.status(200).json({
+    //   success: true,
+    //   message: `Donation accepted successfully and ${numberOfUnits} individual blood units created.`,
+    //   data: {
+    //     donationRequest: result.updatedDonationRequest,
+    //     bloodUnits: result.bloodUnits,
+    //     totalUnitsCreated: result.bloodUnits.length,
+    //     note: "PDF certificate generation failed, but donation was processed successfully.",
+    //   },
+    // });
   } catch (error) {
     console.error("Error in acceptDonation handler:", error);
 
