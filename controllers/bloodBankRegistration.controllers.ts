@@ -87,7 +87,7 @@ const bloodR = async (req: Request, res: Response): Promise<void> => {
       res.cookie("authToken", token, {
         httpOnly: true,
         secure: true,
-        sameSite: "None",
+        sameSite: "none",
         maxAge: 7 * 24 * 60 * 60 * 1000,
       });
 

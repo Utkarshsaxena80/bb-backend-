@@ -99,7 +99,7 @@ const downloadDonationCertificate = async (
       bloodBankAddress: bloodBank.address || `${bloodBank.name} Blood Bank`,
       donationDate: bloodUnits[0]?.donationDate || new Date(),
       numberOfUnits: bloodUnits.length,
-      bloodUnits: bloodUnits.map((unit) => ({
+      bloodUnits: bloodUnits.map((unit:any) => ({
         id: unit.id,
         unitNumber: unit.unitNumber,
         barcode: unit.barcode || "N/A",
@@ -189,14 +189,14 @@ const getDonorDonationHistory = async (
       },
     });
 
-    const history = donations.map((donation) => ({
+    const history = donations.map((donation:any) => ({
       donationId: donation.id,
       donationDate: donation.createdAt,
       bloodType: donation.donorBloodType,
       bloodBank: donation.bloodBank,
       unitsCount: donation.bloodUnits.length,
       totalVolume: donation.bloodUnits.length * 450,
-      unitsUsed: donation.bloodUnits.filter((unit) => unit.status === "used")
+      unitsUsed: donation.bloodUnits.filter((unit:any) => unit.status === "used")
         .length,
       urgencyLevel: donation.urgencyLevel,
       certificateDownloadUrl: `/donations/certificate/${donation.id}/download`,
@@ -208,11 +208,11 @@ const getDonorDonationHistory = async (
       data: {
         totalDonations: history.length,
         totalUnits: history.reduce(
-          (sum, donation) => sum + donation.unitsCount,
+          (sum:any, donation:any) => sum + donation.unitsCount,
           0
         ),
         totalVolume: history.reduce(
-          (sum, donation) => sum + donation.totalVolume,
+          (sum:any, donation:any) => sum + donation.totalVolume,
           0
         ),
         donations: history,

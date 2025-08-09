@@ -13,6 +13,7 @@ import getBloodRequests from "../routes/getBloodRequests.routes.ts";
 
 const app = express();
 app.use(express.json());
+app.use(cookieParser());
 
 app.use(cors({
     origin:"https://bb-frontend-seven.vercel.app",
@@ -20,7 +21,6 @@ app.use(cors({
     credentials:true
 }))
 
-app.use(cookieParser());
 
 const PORT: number = 5000;
 
@@ -34,7 +34,7 @@ app.use("/", getDonations);
 app.use("/donations", acceptDonation);
 app.use('/',getBloodRequests)
 // Make the 'generated-pdfs' folder publicly accessible under the '/certificates' route
-app.use('/certificates', express.static('generated-pdfs'));
+// app.use('/certificates', express.static('generated-pdfs'));
 app.listen(PORT, () => {
   console.log(`listening on port ${PORT}`);
 });

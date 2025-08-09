@@ -78,7 +78,7 @@ const acceptDonation = async (req: AuthenticatedRequest, res: Response) => {
     expiryDate.setDate(donationDate.getDate() + expiryDays);
 
     // Start transaction to update donation status and create blood units
-    const result = await prisma.$transaction(async (tx) => {
+    const result = await prisma.$transaction(async (tx:any) => {
       // Update donation request status to success
       const updatedDonationRequest = await tx.donationRequest.update({
         where: {
@@ -147,7 +147,7 @@ const acceptDonation = async (req: AuthenticatedRequest, res: Response) => {
           bloodBankAddress: bloodBank.address || `${bloodBank.name} Blood Bank`,
           donationDate: donationDate,
           numberOfUnits: numberOfUnits,
-          bloodUnits: result.bloodUnits.map((unit) => ({
+          bloodUnits: result.bloodUnits.map((unit:any) => ({
             id: unit.id,
             unitNumber: unit.unitNumber,
             barcode: unit.barcode || "N/A",
@@ -316,13 +316,13 @@ const getBloodUnits = async (req: AuthenticatedRequest, res: Response) => {
 
     const summary = {
       total: bloodUnits.length,
-      available: bloodUnits.filter((unit) => unit.status === "available")
+      available: bloodUnits.filter((unit:any) => unit.status === "available")
         .length,
-      used: bloodUnits.filter((unit) => unit.status === "used").length,
-      expired: bloodUnits.filter((unit) => unit.status === "expired").length,
-      discarded: bloodUnits.filter((unit) => unit.status === "discarded")
+      used: bloodUnits.filter((unit:any) => unit.status === "used").length,
+      expired: bloodUnits.filter((unit:any) => unit.status === "expired").length,
+      discarded: bloodUnits.filter((unit:any) => unit.status === "discarded")
         .length,
-      byBloodType: bloodUnits.reduce((acc: any, unit) => {
+      byBloodType: bloodUnits.reduce((acc: any, unit:any) => {
         acc[unit.donorBloodType] = (acc[unit.donorBloodType] || 0) + 1; // Each unit counts as 1
         return acc;
       }, {}),

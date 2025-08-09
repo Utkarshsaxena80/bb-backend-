@@ -45,17 +45,17 @@ const getDonation = async (req: AuthenticatedRequest, res: Response) => {
       data: donationRequests,
       count: donationRequests.length,
       summary: {
-        pending: donationRequests.filter((req) => req.status === "pending")
+        pending: donationRequests.filter((req:any) => req.status === "pending")
           .length,
-        success: donationRequests.filter((req) => req.status === "success")
+        success: donationRequests.filter((req:any) => req.status === "success")
           .length,
-        approved: donationRequests.filter((req) => req.status === "approved")
+        approved: donationRequests.filter((req:any) => req.status === "approved")
           .length,
-        completed: donationRequests.filter((req) => req.status === "completed")
+        completed: donationRequests.filter((req:any) => req.status === "completed")
           .length,
-        cancelled: donationRequests.filter((req) => req.status === "cancelled")
+        cancelled: donationRequests.filter((req:any) => req.status === "cancelled")
           .length,
-        rejected: donationRequests.filter((req) => req.status === "rejected")
+        rejected: donationRequests.filter((req:any) => req.status === "rejected")
           .length,
       },
     });

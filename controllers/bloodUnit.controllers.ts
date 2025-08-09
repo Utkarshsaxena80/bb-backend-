@@ -159,7 +159,7 @@ const allocateBloodUnits = async (req: AuthenticatedRequest, res: Response) => {
     }
 
     // Allocate the units using transaction
-    const result = await prisma.$transaction(async (tx) => {
+    const result = await prisma.$transaction(async (tx:any) => {
       const allocatedUnits = [];
 
       for (const unit of availableUnits) {
@@ -283,21 +283,21 @@ const getBloodInventory = async (req: AuthenticatedRequest, res: Response) => {
 
     bloodTypes.forEach((bloodType) => {
       const typeUnits = bloodUnits.filter(
-        (unit) => unit.donorBloodType === bloodType
+        (unit:any) => unit.donorBloodType === bloodType
       );
 
       inventory[bloodType] = {
         total: typeUnits.length, // Each unit is individual now
         available: typeUnits.filter(
-          (unit) => unit.status === "available" && unit.expiryDate > currentDate
+          (unit:any) => unit.status === "available" && unit.expiryDate > currentDate
         ).length,
-        used: typeUnits.filter((unit) => unit.status === "used").length,
+        used: typeUnits.filter((unit:any) => unit.status === "used").length,
         expired: typeUnits.filter(
-          (unit) =>
+          (unit:any) =>
             unit.status === "expired" ||
             (unit.status === "available" && unit.expiryDate <= currentDate)
         ).length,
-        expiringSoon: typeUnits.filter((unit) => {
+        expiringSoon: typeUnits.filter((unit:any) => {
           const daysToExpiry = Math.ceil(
             (unit.expiryDate.getTime() - currentDate.getTime()) /
               (1000 * 60 * 60 * 24)
