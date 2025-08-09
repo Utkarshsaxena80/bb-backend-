@@ -70,6 +70,7 @@ const donorR = async (req: Request, res: Response): Promise<void> => {
 
       //creating jwt token
       const token = generateToken(pushUser.id);
+      console.log("Cookie set with ",token);
 
       res.cookie("authToken", token, {
         httpOnly: true,

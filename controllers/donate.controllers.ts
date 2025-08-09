@@ -15,7 +15,7 @@ const donationRequestSchema = z.object({
     .enum(["low", "medium", "high", "critical"])
     .optional()
     .default("medium"),
-  requiredUnits: z.number().min(1).max(10).optional().default(1),
+  requiredUnits: z.coerce.number().min(1).max(10).optional().default(1),
   notes: z.string().max(500).optional(),
   preferredDate: z.string().datetime().optional(),
 });
