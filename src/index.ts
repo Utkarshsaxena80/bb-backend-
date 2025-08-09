@@ -34,7 +34,7 @@ app.use("/", getDonations);
 app.use("/donations", acceptDonation);
 app.use('/',getBloodRequests)
 // Make the 'generated-pdfs' folder publicly accessible under the '/certificates' route
-// app.use('/certificates', express.static('generated-pdfs'));
+ app.use('/certificates', express.static('generated-pdfs'));
 app.listen(PORT, () => {
   console.log(`listening on port ${PORT}`);
 });

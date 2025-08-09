@@ -12,7 +12,7 @@ const requiredField = z.object({
 });
 
 interface UserResponse {
-  id?: string;
+  id: string;
   name: string;
   email: string;
   phone: string;
