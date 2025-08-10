@@ -22,7 +22,7 @@ app.use(cors({
 }))
 
 
-const PORT: number = 5000;
+const PORT: number =  process.env.PORT ? parseInt(process.env.PORT) : 5000;;
 
 app.use("/", patientRegsitration);
 app.use("/", donorRegistration);
