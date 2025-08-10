@@ -79,6 +79,7 @@ model DonationRequest {
   preferredDate        DateTime?
   approvedAt           DateTime?
   bloodUnits           BloodUnit[] // Relation to blood units created from this donation
+  certificateUrl       String?
 }
 
 model BloodUnit {
