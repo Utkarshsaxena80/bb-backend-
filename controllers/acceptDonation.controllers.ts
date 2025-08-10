@@ -6,9 +6,14 @@ import path from 'path'
 import{v2 as cloudinary} from 'cloudinary'
 import fs from 'fs/promises'
 import { file } from "pdfkit";
-import dotenv from 'dotenv'
-dotenv.config()
+// import dotenv from 'dotenv'
+// dotenv.config()
 
+interface AuthenticatedRequest extends Request {
+  user?: {
+    userId: string;
+  };
+}
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
@@ -16,11 +21,6 @@ cloudinary.config({
   secure: true, // Ensure secure URLs are generated
 });
 
-interface AuthenticatedRequest extends Request {
-  user?: {
-    userId: string;
-  };
-}
 
 // Input validation schema for accepting donation
 
